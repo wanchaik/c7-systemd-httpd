@@ -2,17 +2,25 @@
 Dockerfile for systemd base image
 
 
-## Build
+## Build image
 ```bash
-docker build --rm -t local/c7-systemd-httpd .
+docker build --rm --no-cache -t local/c7-systemd-httpd .
 ```
 
-### Run
+### Running image (1)
 ```bash
-docker run -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 8000:80 local/c7-systemd-httpd
+docker run -it -v /sys/fs/cgroup:/sys/fs/cgroup:ro --privileged -p 8000:80 local/c7-systemd-httpd
 ```
 
-### Run (Ubuntu)
+### Running image (2)
 ```bash
-docker run -ti -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /tmp/$(mktemp -d):/run -p 8000:80 local/c7-systemd-httpd
+docker run -it -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /tmp/$(mktemp -d):/run -p 8000:80 local/c7-systemd-httpd
+```
+
+### Testing
+```bash
+docker run -d -v /sys/fs/cgroup:/sys/fs/cgroup:ro --privileged --rm -p 8000:80 --name c7-systemd-httpd local/c7-systemd-httpd
+docker exec -it c7-systemd-httpd /bin/bash
+
+docker stop c7-systemd-httpd
 ```
